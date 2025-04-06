@@ -1,0 +1,24 @@
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.5.2.0
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "imsapi", "imsapi.csproj", "{ECD0BEBF-6F7F-737D-8AA8-0F7E424C6896}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{ECD0BEBF-6F7F-737D-8AA8-0F7E424C6896}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{ECD0BEBF-6F7F-737D-8AA8-0F7E424C6896}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{ECD0BEBF-6F7F-737D-8AA8-0F7E424C6896}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{ECD0BEBF-6F7F-737D-8AA8-0F7E424C6896}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {272E03A2-B286-4457-B319-8A4CB1066A33}
+	EndGlobalSection
+EndGlobal
