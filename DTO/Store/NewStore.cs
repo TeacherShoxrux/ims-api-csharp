@@ -1,4 +1,4 @@
-namespace IMSAPI.DTO.Store
+namespace imsapi.DTO.Store
 {
     public class NewStore
     {
