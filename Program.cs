@@ -1,6 +1,7 @@
 using System.Text;
 using System.Text.Json.Serialization;
 using imsapi.Data;
+using imsapi.Services;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.OpenApi.Models;
 
@@ -26,6 +27,10 @@ builder.Services.AddSwaggerGen(
     builder.Services.AddDbContext<AppDbContext>(options => options
         .UseSqlite(builder.Configuration
         .GetConnectionString("DefaultConnection")));
+        builder.Services.AddScoped<IStoreService, StoreService>();
+        builder.Services.AddScoped<ICategoryService, CategoryService>();
+        builder.Services.AddScoped<IProductService, ProductService>();
+        builder.Services.AddScoped<IUserService, UserService>();
 // builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
 // // Add services to the container.
 // builder.Services.AddControllers().AddJsonOptions(x =>
@@ -85,5 +90,5 @@ app.UseHttpsRedirection();
 // app.UseAuthentication();
 // app.UseAuthorization();
 
-// app.MapControllers();
+app.MapControllers();
 app.Run();

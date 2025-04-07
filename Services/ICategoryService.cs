@@ -8,7 +8,7 @@ namespace imsapi.Services
         // Define methods for the category service
         Task<Result<IEnumerable<Category>>> GetCategoriesByStoreId(int storeId);
         Task<Result<Category>> GetCategoryById(int id);
-        Task<Result<Category>> AddCategory(NewCategory category);
+        Task<Result<Category>> AddCategory(int storeId,NewCategory category);
         Task<Result<Category>> UpdateCategory(int categoryId, NewCategory category);
         Task<Result<Category>> DeleteCategory(int categoryId);
     }

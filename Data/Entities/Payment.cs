@@ -4,7 +4,6 @@ namespace imsapi.Data.Entities
 {
     public class Payment: EntityBase
     {
-        public int Id { get; set; }
         public decimal amount { get; set; }
         public string paymentMethod { get; set; }
         public int storeId { get; set; }

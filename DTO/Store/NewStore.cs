@@ -1,12 +1,21 @@
+using System.ComponentModel.DataAnnotations;
+
 namespace imsapi.DTO.Store
 {
     public class NewStore
     {
-        public int Id { get; set; }
-        public string Name { get; set; }
-        public string Address { get; set; }
-        public string PhoneNumber { get; set; }
-        public string Email { get; set; }
+
+        public string storeName { get; set; }
+
+        public string? address { get; set; }
+        
+        [Required]
+        [Phone]
+        public string phone { get; set; }
+        
+        [Required]
+        public string password { get; set; }
+        
 
     }
 }

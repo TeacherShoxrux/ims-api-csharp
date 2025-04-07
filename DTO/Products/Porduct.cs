@@ -2,9 +2,12 @@ namespace IMSAPI.DTO.Products
 {
     public class Product
     {
-        public int Id { get; set; }
-        public string Name { get; set; }
-        public string Description { get; set; }
-        public decimal Price { get; set; }
+        public int id { get; set; }
+        public string name { get; set; }
+        public string? description { get; set; }
+        public decimal salePrice { get; set; }
+        public decimal purchasePrice { get; set; }
+        public int quantity { get; set; }
+        public string? image { get; set; }
     }
 }

@@ -2,6 +2,7 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using imsapi.Data;
 
@@ -10,16 +11,18 @@ using imsapi.Data;
 namespace talim_aspnet_core.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    partial class AppDbContextModelSnapshot : ModelSnapshot
+    [Migration("20250406230620_init2")]
+    partial class init2
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder.HasAnnotation("ProductVersion", "9.0.1");
 
             modelBuilder.Entity("imsapi.Data.Entities.Admin", b =>
                 {
-                    b.Property<int>("id")
+                    b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("INTEGER");
 
@@ -48,14 +51,14 @@ namespace talim_aspnet_core.Migrations
                     b.Property<DateTime?>("updatedAt")
                         .HasColumnType("TEXT");
 
-                    b.HasKey("id");
+                    b.HasKey("Id");
 
                     b.ToTable("Admins");
                 });
 
             modelBuilder.Entity("imsapi.Data.Entities.Category", b =>
                 {
-                    b.Property<int>("id")
+                    b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("INTEGER");
 
@@ -78,7 +81,7 @@ namespace talim_aspnet_core.Migrations
                     b.Property<DateTime?>("updatedAt")
                         .HasColumnType("TEXT");
 
-                    b.HasKey("id");
+                    b.HasKey("Id");
 
                     b.HasIndex("storeId");
 
@@ -87,7 +90,7 @@ namespace talim_aspnet_core.Migrations
 
             modelBuilder.Entity("imsapi.Data.Entities.Customer", b =>
                 {
-                    b.Property<int>("id")
+                    b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("INTEGER");
 
@@ -116,7 +119,7 @@ namespace talim_aspnet_core.Migrations
                     b.Property<int>("userId")
                         .HasColumnType("INTEGER");
 
-                    b.HasKey("id");
+                    b.HasKey("Id");
 
                     b.HasIndex("storeId");
 
@@ -127,7 +130,7 @@ namespace talim_aspnet_core.Migrations
 
             modelBuilder.Entity("imsapi.Data.Entities.Payment", b =>
                 {
-                    b.Property<int>("id")
+                    b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("INTEGER");
 
@@ -154,7 +157,7 @@ namespace talim_aspnet_core.Migrations
                     b.Property<int>("userId")
                         .HasColumnType("INTEGER");
 
-                    b.HasKey("id");
+                    b.HasKey("Id");
 
                     b.HasIndex("customerId");
 
@@ -167,7 +170,7 @@ namespace talim_aspnet_core.Migrations
 
             modelBuilder.Entity("imsapi.Data.Entities.PaymentItem", b =>
                 {
-                    b.Property<int>("id")
+                    b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("INTEGER");
 
@@ -195,7 +198,7 @@ namespace talim_aspnet_core.Migrations
                     b.Property<DateTime?>("updatedAt")
                         .HasColumnType("TEXT");
 
-                    b.HasKey("id");
+                    b.HasKey("Id");
 
                     b.HasIndex("paymentId");
 
@@ -206,11 +209,11 @@ namespace talim_aspnet_core.Migrations
 
             modelBuilder.Entity("imsapi.Data.Entities.Product", b =>
                 {
-                    b.Property<int>("id")
+                    b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("INTEGER");
 
-                    b.Property<int?>("Paymentid")
+                    b.Property<int?>("PaymentId")
                         .HasColumnType("INTEGER");
 
                     b.Property<int>("categoryId")
@@ -220,18 +223,16 @@ namespace talim_aspnet_core.Migrations
                         .HasColumnType("TEXT");
 
                     b.Property<string>("description")
+                        .IsRequired()
                         .HasColumnType("TEXT");
 
                     b.Property<string>("image")
+                        .IsRequired()
                         .HasColumnType("TEXT");
 
                     b.Property<string>("name")
                         .IsRequired()
                         .HasMaxLength(100)
-                        .HasColumnType("TEXT");
-
-                    b.Property<string>("nameLower")
-                        .IsRequired()
                         .HasColumnType("TEXT");
 
                     b.Property<decimal>("purchasePrice")
@@ -252,9 +253,9 @@ namespace talim_aspnet_core.Migrations
                     b.Property<int>("userId")
                         .HasColumnType("INTEGER");
 
-                    b.HasKey("id");
+                    b.HasKey("Id");
 
-                    b.HasIndex("Paymentid");
+                    b.HasIndex("PaymentId");
 
                     b.HasIndex("categoryId");
 
@@ -267,7 +268,7 @@ namespace talim_aspnet_core.Migrations
 
             modelBuilder.Entity("imsapi.Data.Entities.Store", b =>
                 {
-                    b.Property<int>("id")
+                    b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("INTEGER");
 
@@ -300,14 +301,14 @@ namespace talim_aspnet_core.Migrations
                     b.Property<DateTime?>("updatedAt")
                         .HasColumnType("TEXT");
 
-                    b.HasKey("id");
+                    b.HasKey("Id");
 
                     b.ToTable("Stores");
                 });
 
             modelBuilder.Entity("imsapi.Data.Entities.User", b =>
                 {
-                    b.Property<int>("id")
+                    b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("INTEGER");
 
@@ -344,7 +345,7 @@ namespace talim_aspnet_core.Migrations
                     b.Property<DateTime?>("updatedAt")
                         .HasColumnType("TEXT");
 
-                    b.HasKey("id");
+                    b.HasKey("Id");
 
                     b.HasIndex("storeId");
 
@@ -431,7 +432,7 @@ namespace talim_aspnet_core.Migrations
                 {
                     b.HasOne("imsapi.Data.Entities.Payment", null)
                         .WithMany("Products")
-                        .HasForeignKey("Paymentid");
+                        .HasForeignKey("PaymentId");
 
                     b.HasOne("imsapi.Data.Entities.Category", "Category")
                         .WithMany("Products")

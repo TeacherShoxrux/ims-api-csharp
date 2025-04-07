@@ -1,16 +1,18 @@
 namespace imsapi.Controllers;
 
+using imsapi.Services;
+using IMSAPI.DTO.User;
 using Microsoft.AspNetCore.Mvc;
 
 [ApiController]
 [Route("api/[controller]")]
 public partial class UserController : ControllerBase
 {
-    // // private readonly IUserService _userService;
-    // public UserController(IUserService userService)
-    // {
-    //     _userService=userService;
-    // }
+    private readonly IUserService _userService;
+    public UserController(IUserService userService)
+    {
+        _userService=userService;
+    }
     [HttpGet]
      public async Task<IActionResult> Authenticate(int id)
     {
@@ -27,13 +29,16 @@ public partial class UserController : ControllerBase
         return Ok("session");
     }
     
-    [HttpPost("Register")]
-     public async Task<IActionResult> RegisterUser(
-        // UserRegister register
-        )
+    [HttpPost("Register/{storeId}")]
+     public async Task<IActionResult> RegisterUser(int storeId,[FromBody]NewUser newUser)
     {
-        // var user = await _userService.RegisterUser(register);
-        return Ok("user");
+        var user = await _userService.CreateUserAsync(storeId, newUser);
+        if (!user.IsSuccess)
+        {
+            return BadRequest(user.ErrorMessage);
+        }
+        return Ok(user.Data);
+        
     }
     
 }
