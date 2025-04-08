@@ -6,6 +6,8 @@ namespace IMSAPI.DTO.User
         public int UserId { get; set; }
         public DateTime CreatedAt { get; set; }
         public DateTime ExpiresAt { get; set; }
+        public string accessToken { get; set; }
+        public string refreshoken { get; set; }
 
         public bool IsExpired => DateTime.UtcNow > ExpiresAt;
     }

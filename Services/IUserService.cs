@@ -12,7 +12,7 @@ namespace imsapi.Services
         Task<Result<User>> CreateUserAsync(int storeId,NewUser user);
         Task<Result<User>> UpdateUserAsync(int userId, NewUser user);
         Task<Result<User>> DeleteUserAsync(int storeId,int userId);
-        Task<Result<User>> Authenticate(UserLogin login);
+        Task<Result<Session>> Authenticate(UserLogin login);
     }
 
 

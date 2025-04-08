@@ -1,6 +1,3 @@
-using System;
-using System.Collections.Generic;
-using System.Threading.Tasks;
 using DTO.User;
 using imsapi.Data;
 using imsapi.DTO;
@@ -162,29 +159,31 @@ namespace imsapi.Services
             }
         }
 
-        public Task<Result<User>> Authenticate(UserLogin login)
+        public Task<Result<Session>> Authenticate(UserLogin login)
         {
             try
             {
                 var user = _dbContext.Users.FirstOrDefault(u => u.phone == login.phone && u.passwordHash == login.password.Sha256());
                 if (user == null)
                 {
-                    return Task.FromResult(new Result<User>("Invalid credentials"));
+                    return Task.FromResult(new Result<Session>("Invalid credentials"));
                 }
-                return Task.FromResult(new Result<User>(true)
+                return Task.FromResult(new Result<Session>(true)
                 {
                     Data = new()
                     {
-                        id = user.id,
-                        fullName = user.fullName,
-                        phone = user.phone,
-                        role = Enum.GetName(user.role),
+                        SessionId = Guid.NewGuid().ToString(),
+                        UserId = user.id,
+                        CreatedAt = DateTime.UtcNow,
+                        ExpiresAt = DateTime.UtcNow.AddHours(1),
+                        accessToken = Guid.NewGuid().ToString(),
+                        refreshoken = Guid.NewGuid().ToString(),
                     }
                 });
             }
             catch (Exception ex)
             {
-                return Task.FromResult(new Result<User>(ex.Message));
+                return Task.FromResult(new Result<Session>(ex.Message));
             }
         }
     }
