@@ -2,7 +2,9 @@ using System.Text;
 using System.Text.Json.Serialization;
 using imsapi.Data;
 using imsapi.Services;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 
 
@@ -22,38 +24,47 @@ builder.Services.AddCors(options =>
 });
 builder.Services.AddControllers().AddJsonOptions(x =>
                 x.JsonSerializerOptions.ReferenceHandler = ReferenceHandler.IgnoreCycles);
-builder.Services.AddSwaggerGen(
-    c=>c.SwaggerDoc("v1",new OpenApiInfo{Title="Aspnet Core Api", Version="v1"}));
+
+
+
     builder.Services.AddDbContext<AppDbContext>(options => options
         .UseSqlite(builder.Configuration
         .GetConnectionString("DefaultConnection")));
+
+        builder.Services.Configure<JwtSettings>(builder.Configuration.GetSection("JwtSettings"));
+        builder.Services.AddHttpContextAccessor();
+        builder.Services.AddScoped<IJwtService, JwtService>();
         builder.Services.AddScoped<IStoreService, StoreService>();
         builder.Services.AddScoped<ICategoryService, CategoryService>();
         builder.Services.AddScoped<IProductService, ProductService>();
         builder.Services.AddScoped<IUserService, UserService>();
-// builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
-// // Add services to the container.
-// builder.Services.AddControllers().AddJsonOptions(x =>
-//                 x.JsonSerializerOptions.ReferenceHandler = ReferenceHandler.IgnoreCycles);
-// builder.Services.AddSwaggerGen(
-//     c=>c.SwaggerDoc("v1",new OpenApiInfo{Title="Aspnet Core Api", Version="v1"})
-// );
-// // Add Auhentication JWT token
-// builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
-//     .AddJwtBearer(option=>{
-//     option.TokenValidationParameters=new TokenValidationParameters{
-//         ValidateAudience=true,
-//         ValidateIssuer=true,
-//         ValidateLifetime=true,
-//         ValidateIssuerSigningKey=true,
-//         ValidIssuer=builder.Configuration["Jwt:Issuer"],
-//         ValidAudience=builder.Configuration["Jwt:Audience"],
-//         ClockSkew=TimeSpan.Zero,
-//         IssuerSigningKey= new SymmetricSecurityKey(Encoding.UTF8.GetBytes(builder.Configuration["Jwt:Key"]!))
-//     }; 
-// });
-// builder.Services.AddAuthorization();
+        builder.Services.AddScoped<IImageService, ImageService>();
 
+
+builder.Services.Configure<JwtSettings>(builder.Configuration.GetSection("JwtSettings"));
+
+
+// JWT middleware ni qo'shish
+builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
+    .AddJwtBearer(options =>
+    {
+        options.TokenValidationParameters = new TokenValidationParameters
+        {
+            ValidateIssuer = true,
+            ValidateAudience = true,
+            ValidateLifetime = true,
+            ValidateIssuerSigningKey = true,
+
+            ValidIssuer = builder.Configuration["JwtSettings:Issuer"],
+            ValidAudience = builder.Configuration["JwtSettings:Audience"],
+            IssuerSigningKey = new SymmetricSecurityKey(
+                Encoding.UTF8.GetBytes(builder.Configuration["JwtSettings:Key"])
+            )
+        };
+    });
+
+// Authorization middleware'ni qo'shish
+builder.Services.AddAuthorization();
 
 // //' Add DbConext
 // var connString=builder.Configuration.GetConnectionString("DefaultConnectionString");
@@ -78,6 +89,10 @@ if (app.Environment.IsDevelopment())
 app.UseCors("AllowAll");
 // Seed.Init(app);
 app.UseHttpsRedirection();
+app.UseStaticFiles(); // Bu wwwroot papkasidagi fayllarga kirishga ruxsat beradi
+
+                    // URL orqali fayllarga kirish uchun sozlash (masalan, /images/pic.jpg)
+app.UseRouting();
 // app.UseStaticFiles(
 //     new StaticFileOptions
 //     {
@@ -87,8 +102,8 @@ app.UseHttpsRedirection();
 //         RequestPath=" "
 //     }
 // );
-// app.UseAuthentication();
-// app.UseAuthorization();
+app.UseAuthentication();
+app.UseAuthorization();
 
 app.MapControllers();
 app.Run();

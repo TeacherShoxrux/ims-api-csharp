@@ -8,17 +8,18 @@ namespace imsapi.Services
 {
     public class UserService : IUserService
     {
-        public UserService(AppDbContext dbContext)
+        public UserService(AppDbContext dbContext,IJwtService jwtService)
         {
             _dbContext = dbContext;
+            _jwtService=jwtService;
         }
         private readonly AppDbContext _dbContext;
+        private readonly IJwtService _jwtService;
 
         public Task<Result<User>> CreateUserAsync(int storeId, NewUser user)
         {
             try
             {
-                // Check if the user already exists
                 var existingUser = _dbContext.Users.FirstOrDefault(u => u.phone == user.phone && u.storeId == storeId);
                 if (existingUser != null)
                 {
@@ -172,11 +173,11 @@ namespace imsapi.Services
                 {
                     Data = new()
                     {
-                        SessionId = Guid.NewGuid().ToString(),
+                        
                         UserId = user.id,
                         CreatedAt = DateTime.UtcNow,
-                        ExpiresAt = DateTime.UtcNow.AddHours(1),
-                        accessToken = Guid.NewGuid().ToString(),
+                        ExpiresAt = DateTime.UtcNow.AddHours(1440),
+                        accessToken = _jwtService.GenerateToken(user.id, Enum.GetName(user.role).ToString(),user.storeId),
                         refreshoken = Guid.NewGuid().ToString(),
                     }
                 });

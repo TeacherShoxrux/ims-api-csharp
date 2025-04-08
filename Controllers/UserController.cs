@@ -1,7 +1,12 @@
 namespace imsapi.Controllers;
 
+using System.IdentityModel.Tokens.Jwt;
+using System.Security.Claims;
+using global::DTO.User;
 using imsapi.Services;
 using IMSAPI.DTO.User;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
 [ApiController]
@@ -9,9 +14,11 @@ using Microsoft.AspNetCore.Mvc;
 public partial class UserController : ControllerBase
 {
     private readonly IUserService _userService;
-    public UserController(IUserService userService)
+    private readonly IHttpContextAccessor _httpContextAccessor;
+    public UserController(IUserService userService,IHttpContextAccessor httpContextAccessor)
     {
         _userService=userService;
+         _httpContextAccessor = httpContextAccessor;
     }
     [HttpGet]
      public async Task<IActionResult> Authenticate(int id)
@@ -21,13 +28,12 @@ public partial class UserController : ControllerBase
     }
     
     [HttpPost("Login")]
-     public async Task<IActionResult> Authenticate(
-        // UserLogin login
-        )
+     public async Task<IActionResult> Authenticate(UserLogin login)
     {
-        // var session = await _userService.Authenticate(login);
-        return Ok("session");
+        var session = await _userService.Authenticate(login);
+        return Ok(session);
     }
+
     
     [HttpPost("Register/{storeId}")]
      public async Task<IActionResult> RegisterUser(int storeId,[FromBody]NewUser newUser)
@@ -37,8 +43,22 @@ public partial class UserController : ControllerBase
         {
             return BadRequest(user.ErrorMessage);
         }
-        return Ok(user.Data);
-        
+        return Ok(user);
     }
+   
+    [Authorize]
+    [HttpGet("info")]
+     public async Task<IActionResult> getInfo()
+    {
+            var userId = User.FindFirst("userId")?.Value;
+            var role = User.FindFirst("userRole")?.Value;
+            var storeId = User.FindFirst("storeId")?.Value;
+    return Ok(new { 
+        UserId = userId, 
+        Role = role, 
+        StoreId = storeId,
+      });
+    }
+
     
 }

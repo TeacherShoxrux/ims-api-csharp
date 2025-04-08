@@ -1,4 +1,5 @@
+namespace imsapi.Services;
 public interface IJwtService
 {
-    string GenerateToken(Guid userId, string role, Guid storeId);
+    string GenerateToken(int userId, string role, int storeId);
 }
