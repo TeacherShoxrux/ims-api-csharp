@@ -13,7 +13,6 @@ namespace imsapi.Data.Entities
         public ICollection<Product> Products { get; set; }
         public ICollection<PaymentItem> PaymentItems { get; set; }
         public Customer Customer { get; set; }
-
         public int customerId { get; set; }
         
     }

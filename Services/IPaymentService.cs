@@ -1,9 +1,13 @@
+using imsapi.DTO;
+using imsapi.DTO.Payment;
+
 namespace imsapi.Services
 {
     public interface IPaymentService
     {
-        Task<bool> ProcessPaymentAsync(decimal amount, string paymentMethod);
-        Task<decimal> GetPaymentStatusAsync(string transactionId);
-        Task<bool> RefundPaymentAsync(string transactionId);
+        Task<Result<PaymentShort>> ProcessPaymentAsync(int storeId,int userId,NewPayment payment);
+        Task<Result<List<PaymentShort>>> GetPaymentsListPagenatedByStoreId(int storeId, int page, int pageSize);
+        Task<Result<Payment>> GetPaymentById(int id);
+
     }
 }
