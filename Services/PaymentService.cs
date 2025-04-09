@@ -63,9 +63,43 @@ public class PaymentService : IPaymentService
         }
     }
 
-    public Task<Result<List<PaymentShort>>> GetPaymentsListPagenatedByStoreId(int storeId, int page, int pageSize)
+    public Task<Result<List<PaymentShort>>> GetPaymentsListPagenatedByStoreId(int storeId, int page=1, int pageSize=10)
     {
-        throw new NotImplementedException();
+        try{
+            var payments = _context.Payments
+                .Include(c => c.Customer)
+                .Where(p => p.storeId == storeId)
+                .Skip((page - 1) * pageSize)
+                .Take(pageSize)
+                .ToList();
+
+            if (payments == null || payments.Count == 0)
+            {
+                return Task.FromResult(new Result<List<PaymentShort>>("Payments not found"));
+            }
+
+            var result = payments.Select(p => new PaymentShort()
+            {
+                Id = p.id,
+                CreatedAt = p.createdAt,
+                Amount = p.amount,
+                PaymentMethod = p.paymentMethod,
+                customerName = p.Customer.fullName,
+                customerPhone = p.Customer.phone,
+                customerId = p.Customer.id,
+
+              
+            }).ToList();
+
+            return Task.FromResult(new Result<List<PaymentShort>>(true)
+            {
+                Data = result
+            });
+        }
+        catch (Exception ex)
+        {
+            return Task.FromResult(new Result<List<PaymentShort>>(ex.Message));
+        }
     }
 
     public Task<Result<PaymentShort>> ProcessPaymentAsync(int storeId, int userId, NewPayment payment)
@@ -140,6 +174,5 @@ public class PaymentService : IPaymentService
         {
             return Task.FromResult(new Result<PaymentShort>(ex.Message));
         }
-        throw new NotImplementedException();
     }
 }
