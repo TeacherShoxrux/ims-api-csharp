@@ -88,7 +88,6 @@ public class PaymentService : IPaymentService
                 customerPhone = p.Customer.phone,
                 customerId = p.Customer.id,
 
-              
             }).ToList();
 
             return Task.FromResult(new Result<List<PaymentShort>>(true)
@@ -106,16 +105,7 @@ public class PaymentService : IPaymentService
     {
         try
         {
-            _context.Customers.Add(
-                new(){
-                    storeId=1,
-                    userId=1,
-                    fullName="Anvaer",
-                    phone="+998921112233",
-                    info="hjshjdj",
-                }
-            );
-            _context.SaveChanges();
+
             var customer = _context.Customers.FirstOrDefault(c => c.id == payment.customerId);
             if (customer == null)
             {

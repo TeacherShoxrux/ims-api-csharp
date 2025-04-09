@@ -40,6 +40,7 @@ builder.Services.AddControllers().AddJsonOptions(x =>
         builder.Services.AddScoped<IUserService, UserService>();
         builder.Services.AddScoped<IImageService, ImageService>();
         builder.Services.AddScoped<IPaymentService, PaymentService>();
+        builder.Services.AddScoped<ICustomerService, CustomerService>();
 
 
 builder.Services.Configure<JwtSettings>(builder.Configuration.GetSection("JwtSettings"));

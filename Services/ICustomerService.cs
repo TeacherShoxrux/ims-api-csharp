@@ -7,7 +7,7 @@ namespace imsapi.Services
     {
         Task<Result<IEnumerable<Customer>>> GetCustomersByStoreIdAsync(int storeId);
         Task<Result<Customer?>> GetCustomerByIdAsync(int id);
-        Task<Result<Customer>> AddCustomerAsync(int userId,Customer customer);
+        Task<Result<Customer>> AddCustomerAsync(int storeId,int userId,NewCustomer customer);
         Task<Result<Customer>> UpdateCustomerAsync(int userId, Customer customer);
         Task<Result<Customer>> DeleteCustomerAsync(int storeId, int id);
     }
