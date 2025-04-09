@@ -3,10 +3,12 @@ namespace imsapi.Controllers;
 using imsapi.DTO.Store;
 using imsapi.Services;
 using IMSAPI.DTO.Products;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 [ApiController]
 [Route("api/[controller]")]
+[Authorize]
 public class ProductController : ControllerBase
 {
     private IProductService _productService;
@@ -15,9 +17,11 @@ public class ProductController : ControllerBase
     {
     _productService = productService;
     }
-    [HttpGet("GetAllProductsByStoreId/{storeId}")]
-    public async Task<IActionResult> GetAllProductsByStoreId(int storeId, int pageIndex = 1, int pageSize = 10)
+    [HttpGet("GetAllProductsByStoreId/")]
+    public async Task<IActionResult> GetAllProductsByStoreId( int pageIndex = 1, int pageSize = 10)
     {
+          
+        var storeId =int.Parse(User.FindFirst("storeId")?.Value);
         var result = await _productService.GetAllProductsByStoreIdAsync(storeId, pageIndex, pageSize);
         if (result.IsSuccess)
         {
@@ -25,9 +29,11 @@ public class ProductController : ControllerBase
         }
         return NotFound(result.ErrorMessage);
     }
-    [HttpGet("GetAllProductsByStoreIdAndCategoryId/{storeId}/{categoryId}")]
-    public async Task<IActionResult> GetAllProductsByStoreIdAndCategoryId(int storeId, int categoryId, int pageIndex = 1, int pageSize = 10)
+    [HttpGet("GetAllProductsByStoreIdAndCategoryId/{categoryId}")]
+    public async Task<IActionResult> GetAllProductsByStoreIdAndCategoryId(int categoryId, int pageIndex = 1, int pageSize = 10)
     {
+        
+        var storeId =int.Parse(User.FindFirst("storeId")?.Value);
         var result = await _productService.GetAllProductsByStoreIdAndCategoryIdAsync(storeId, categoryId, pageIndex, pageSize);
         if (result.IsSuccess)
         {
@@ -35,9 +41,11 @@ public class ProductController : ControllerBase
         }
         return NotFound(result.ErrorMessage);
     }
-    [HttpGet("GetAllProductsByStoreIdAndSearchTerm/{storeId}/{searchTerm}")]
-    public async Task<IActionResult> GetAllProductsByStoreIdAndSearchTerm(int storeId, string searchTerm, int pageIndex = 1, int pageSize = 10)
+    [HttpGet("GetAllProductsByStoreIdAndSearchTerm/{searchTerm}")]
+    public async Task<IActionResult> GetAllProductsByStoreIdAndSearchTerm(string searchTerm, int pageIndex = 1, int pageSize = 10)
     {
+ 
+        var storeId =int.Parse(User.FindFirst("storeId")?.Value);
         var result = await _productService.GetAllProductsByStoreIdAndSearchTermAsync(storeId, searchTerm, pageIndex, pageSize);
         if (result.IsSuccess)
         {
@@ -55,13 +63,16 @@ public class ProductController : ControllerBase
         }
         return NotFound(result.ErrorMessage);
     }
-    [HttpPost("AddProduct/{storeId}")]
-    public async Task<IActionResult> AddProduct(int storeId, [FromBody] NewProduct product)
+    [HttpPost("AddProduct")]
+    public async Task<IActionResult> AddProduct([FromBody] NewProduct product)
     {
-        var result = await _productService.AddProductAsync(storeId, 1, product);
+          
+        var storeId =int.Parse(User.FindFirst("storeId")?.Value);
+        var userId = int.Parse(User.FindFirst("userId")?.Value);
+        var result = await _productService.AddProductAsync(storeId, userId, product);
         if (result.IsSuccess)
         {
-            return Created("", result.Data);
+            return Ok(result.Data);
         }
         return NotFound(result.ErrorMessage);
     }

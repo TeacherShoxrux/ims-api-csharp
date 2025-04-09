@@ -1,9 +1,15 @@
 using imsapi.DTO;
 using imsapi.Services;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 namespace imsapi.Controllers;
 [ApiController]
 [Route("api/[controller]")]
+[Produces("application/json")]
+[Consumes("application/json")]
+[ProducesResponseType(StatusCodes.Status200OK)]
+[ProducesResponseType(StatusCodes.Status400BadRequest)]
+[Authorize]
 public class ImageController : ControllerBase
 {
     private readonly IImageService _imageService;

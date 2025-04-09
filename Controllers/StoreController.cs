@@ -24,10 +24,11 @@ public async Task<IActionResult> CreateStore([FromBody] NewStore store)
     }
     return BadRequest(result.ErrorMessage);
 }
-[HttpGet("GetStore/{id}")]
-public async Task<IActionResult> GetStore(int id)
+[HttpGet("GetStore")]
+public async Task<IActionResult> GetStore()
 {
-    var result = await _storeService.GetStoreByIdAsync(id);
+    var storeId =int.Parse(User.FindFirst("storeId")?.Value);
+    var result = await _storeService.GetStoreByIdAsync(storeId);
     if (result.IsSuccess)
     {
         return Ok(result.Data);

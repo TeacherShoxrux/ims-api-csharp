@@ -1,12 +1,14 @@
 using System.Threading.Tasks;
 using imsapi.DTO.Category;
 using imsapi.Services;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace imsapi.Controllers
 {
     [ApiController]
     [Route("api/[controller]")]
+    [Authorize]
     public class CategoryController : ControllerBase
     {
         public CategoryController(ICategoryService categoryService)
@@ -14,9 +16,10 @@ namespace imsapi.Controllers
             _categoryService = categoryService;
         }
         private readonly ICategoryService _categoryService;
-        [HttpGet("GetCategoriesByStoreId/{storeId}")]
-        public async Task<IActionResult> GetAllCategories(int storeId)
+        [HttpGet("GetCategories")]
+        public async Task<IActionResult> GetAllCategories()
         {
+            var storeId =int.Parse(User.FindFirst("storeId")?.Value);
             var result = await _categoryService.GetCategoriesByStoreId(storeId);
             if (result.IsSuccess)
             {
@@ -36,12 +39,12 @@ namespace imsapi.Controllers
             return NotFound(result.ErrorMessage);
         }
 
-        [HttpPost("CreateCategory/{storeId}")]
-        [ProducesResponseType(typeof(NewCategory), 201)]
-        public async Task<IActionResult> CreateCategory(int storeId,[FromBody] NewCategory category)
+        [HttpPost("CreateCategory")]
+        public async Task<IActionResult> CreateCategory([FromBody] NewCategory category)
         {
+            var storeId =int.Parse(User.FindFirst("storeId")?.Value);
             var result = await _categoryService.AddCategory(storeId, category);
-            return Created("", result.Data);
+            return Ok( result.Data);
         }
 
         [HttpPut("{id}")]

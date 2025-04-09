@@ -2,12 +2,14 @@ using System.Threading.Tasks;
 using imsapi.DTO;
 using imsapi.DTO.Payment;
 using imsapi.Services;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Mvc;
 
 namespace imsapi.Controllers;
 [ApiController]
 [Route("api/[controller]")]
+[Authorize]
 public class PaymentController : ControllerBase
 {
     private readonly IPaymentService _paymentService;

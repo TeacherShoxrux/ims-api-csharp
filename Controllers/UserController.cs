@@ -34,10 +34,11 @@ public partial class UserController : ControllerBase
         return Ok(session);
     }
 
-    
-    [HttpPost("Register/{storeId}")]
-     public async Task<IActionResult> RegisterUser(int storeId,[FromBody]NewUser newUser)
+    [Authorize("Director")]
+    [HttpPost("Register")]
+     public async Task<IActionResult> RegisterUser([FromBody]NewUser newUser)
     {
+        var storeId = int.Parse(User.FindFirst("storeId")?.Value);
         var user = await _userService.CreateUserAsync(storeId, newUser);
         if (!user.IsSuccess)
         {

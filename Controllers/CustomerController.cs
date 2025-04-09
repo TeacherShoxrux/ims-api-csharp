@@ -1,5 +1,6 @@
 using imsapi.Services;
 using IMSAPI.DTO.Customer;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace imsapi.Controllers
@@ -8,6 +9,7 @@ namespace imsapi.Controllers
 
     [Route("api/[controller]")]
     [ApiController]
+    [Authorize]
     public class CustomerController : ControllerBase
     {
         private readonly ICustomerService _customerService;
@@ -20,8 +22,8 @@ namespace imsapi.Controllers
         [HttpPost]
         public async Task<IActionResult> AddCustomer([FromBody] NewCustomer customer)
         {
-            var storeId = 1; // Replace with actual store ID
-            var userId = 1; // Replace with actual user ID
+            var userId = int.Parse(User.FindFirst("userId")?.Value);
+            var storeId =int.Parse(User.FindFirst("storeId")?.Value);
             var result = await _customerService.AddCustomerAsync(storeId,userId,customer);
             if (result.IsSuccess)
             {
