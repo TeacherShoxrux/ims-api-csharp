@@ -5,6 +5,7 @@
     <Nullable>enable</Nullable>
     <ImplicitUsings>enable</ImplicitUsings>
     <RootNamespace>talim_aspnet_core</RootNamespace>
+    <CETCompat>false</CETCompat>
   </PropertyGroup>
 
   <ItemGroup>
