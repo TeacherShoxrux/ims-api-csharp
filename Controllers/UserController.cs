@@ -34,7 +34,7 @@ public partial class UserController : ControllerBase
         return Ok(session);
     }
 
-    [Authorize()]
+    [Authorize]
     [HttpPost("Register")]
      public async Task<IActionResult> RegisterUser([FromBody]NewUser newUser)
     {
@@ -61,5 +61,13 @@ public partial class UserController : ControllerBase
       });
     }
 
+    [Authorize]
+    [HttpGet("all")]
+     public async Task<IActionResult> GetAllUsers()
+    {
+          var storeId =int.Parse(User.FindFirst("storeId")?.Value!);
+         var result= await _userService.GetAllUsersByStoreIdAsync(storeId);
+        return Ok(result);
+    }
     
 }
