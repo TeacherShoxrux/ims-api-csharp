@@ -20,12 +20,12 @@ public partial class UserController : ControllerBase
         _userService=userService;
          _httpContextAccessor = httpContextAccessor;
     }
-    [HttpGet]
-     public async Task<IActionResult> Authenticate(int id)
-    {
-        // var session = await _userService.GetUserDetails(id);
-        return Ok("session");
-    }
+    // [HttpGet]
+    //  public async Task<IActionResult> Authenticate(int id)
+    // {
+    //     // var session = await _userService.GetUserDetails(id);
+    //     return Ok("session");
+    // }
     
     [HttpPost("Login")]
      public async Task<IActionResult> Authenticate(UserLogin login)
@@ -38,7 +38,7 @@ public partial class UserController : ControllerBase
     [HttpPost("Register")]
      public async Task<IActionResult> RegisterUser([FromBody]NewUser newUser)
     {
-        var storeId = int.Parse(User.FindFirst("storeId")?.Value);
+        var storeId = int.Parse(User.FindFirst("storeId")?.Value!);
         var user = await _userService.CreateUserAsync(storeId, newUser);
         if (!user.IsSuccess)
         {
@@ -49,7 +49,7 @@ public partial class UserController : ControllerBase
    
     [Authorize]
     [HttpGet("info")]
-     public async Task<IActionResult> getInfo()
+     public IActionResult GetInfo()
     {
             var userId = User.FindFirst("userId")?.Value;
             var role = User.FindFirst("userRole")?.Value;
