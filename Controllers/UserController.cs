@@ -34,7 +34,7 @@ public partial class UserController : ControllerBase
         return Ok(session);
     }
 
-    [Authorize("Director")]
+    [Authorize()]
     [HttpPost("Register")]
      public async Task<IActionResult> RegisterUser([FromBody]NewUser newUser)
     {
