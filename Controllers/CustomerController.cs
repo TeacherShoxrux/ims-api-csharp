@@ -45,11 +45,22 @@ namespace imsapi.Controllers
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteCustomer(int id)
         {
-            var storeId = 1; // Replace with actual store ID
+            var storeId =int.Parse(User.FindFirst("storeId")?.Value);
             var result = await _customerService.DeleteCustomerAsync(storeId,id);
             if (result.IsSuccess)
             {
                 return NoContent();
+            }
+            return NotFound(result.ErrorMessage);
+        }
+        [HttpGet("all")]
+        public async Task<IActionResult> GetAllCustomers()
+        {
+            var storeId =int.Parse(User.FindFirst("storeId")?.Value);
+            var result = await _customerService.GetCustomersByStoreIdAsync(storeId);
+            if (result.IsSuccess)
+            {
+                return Ok(result);
             }
             return NotFound(result.ErrorMessage);
         }
