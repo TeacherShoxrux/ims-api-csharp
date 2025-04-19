@@ -67,7 +67,7 @@ public partial class UserController : ControllerBase
     }
     
     [Authorize]
-    [HttpGet]
+    [HttpPut]
      public async Task<IActionResult> UpdateUser(UpdateUser newUser)
     {
           var userId =int.Parse(User.FindFirst("userId")?.Value!);
