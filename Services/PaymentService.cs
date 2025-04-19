@@ -68,6 +68,7 @@ public class PaymentService : IPaymentService
         try{
             var payments = _context.Payments
                 .Include(c => c.Customer)
+                .Include(c => c.User)
                 .Where(p => p.storeId == storeId)
                 .Skip((page - 1) * pageSize)
                 .Take(pageSize)
@@ -85,6 +86,7 @@ public class PaymentService : IPaymentService
                 Amount = p.amount,
                 PaymentMethod = p.paymentMethod,
                 customerName = p.Customer.fullName,
+                userFullName=p.User.fullName,
                 customerPhone = p.Customer.phone,
                 customerId = p.Customer.id,
 

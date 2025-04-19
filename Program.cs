@@ -92,7 +92,7 @@ if (app.Environment.IsDevelopment())
 app.UseCors("AllowAll");
 // Seed.Init(app);
 app.UseHttpsRedirection();
-app.UseStaticFiles(); // Bu wwwroot papkasidagi fayllarga kirishga ruxsat beradi
+app.UseStaticFiles(); // Bu wwwroot papkasidagi fayllarga kirishga ruxsat beradi: http://localhost:5046/images/
 
                     // URL orqali fayllarga kirish uchun sozlash (masalan, /images/pic.jpg)
 app.UseRouting();

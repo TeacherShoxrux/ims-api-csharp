@@ -95,6 +95,8 @@ namespace imsapi.Services
                         fullName = x.fullName,
                         phone = x.phone,
                         role = Enum.GetName(x.role),
+                        email=x.email
+                        
                     }).ToList()
                 });
             }

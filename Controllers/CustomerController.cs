@@ -45,7 +45,7 @@ namespace imsapi.Controllers
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteCustomer(int id)
         {
-            var storeId =int.Parse(User.FindFirst("storeId")?.Value);
+            var storeId = int.Parse(User.FindFirst("storeId")?.Value);
             var result = await _customerService.DeleteCustomerAsync(storeId,id);
             if (result.IsSuccess)
             {

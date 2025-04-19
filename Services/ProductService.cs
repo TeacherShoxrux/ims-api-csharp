@@ -5,6 +5,8 @@ using System.Threading.Tasks;
 using imsapi.Data;
 using imsapi.DTO;
 using IMSAPI.DTO.Products;
+using Microsoft.EntityFrameworkCore;
+
 public class ProductService : IProductService
 {
     public ProductService(AppDbContext context)
@@ -39,7 +41,8 @@ public class ProductService : IProductService
                     description = product.description,
                     salePrice = product.salePrice,
                     purchasePrice = product.purchasePrice,
-                    quantity = product.quantity
+                    quantity = product.quantity,
+                    image=productAdded.Entity.image
                 }
             });
         }
@@ -60,7 +63,7 @@ public class ProductService : IProductService
     {
         try
         {
-            var products = _context.Products
+            var products = _context.Products.Include(e=>e.Category)
                 .Where(p => p.storeId == storeId && p.categoryId == categoryId)
                 .Skip((pageIndex - 1) * pageSize)
                 .Take(pageSize)
@@ -73,7 +76,9 @@ public class ProductService : IProductService
                     description = p.description,
                     salePrice = p.salePrice,
                     purchasePrice = p.purchasePrice,
-                    quantity = p.quantity
+                    categoryName= p.Category?.name??"??",
+                    quantity = p.quantity,
+                    image=p.image
                 }).ToList()
             });
         }
@@ -102,7 +107,8 @@ public class ProductService : IProductService
                     description = p.description,
                     salePrice = p.salePrice,
                     purchasePrice = p.purchasePrice,
-                    quantity = p.quantity
+                    quantity = p.quantity,
+                    image=p.image
                 }).ToList()
             });
         }
@@ -131,7 +137,8 @@ public class ProductService : IProductService
                     description = p.description,
                     salePrice = p.salePrice,
                     purchasePrice = p.purchasePrice,
-                    quantity = p.quantity
+                    quantity = p.quantity,
+                    image=p.image
                 }).ToList()
             });
         }
@@ -162,7 +169,8 @@ public class ProductService : IProductService
                     description = product.description,
                     salePrice = product.salePrice,
                     purchasePrice = product.purchasePrice,
-                    quantity = product.quantity
+                    quantity = product.quantity,
+                    image=product.image
                 }
             });
         }

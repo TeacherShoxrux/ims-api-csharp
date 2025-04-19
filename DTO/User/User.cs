@@ -10,6 +10,7 @@ namespace IMSAPI.DTO.User
         public string? fullName { get; set; }
         public string? Password { get; set; }
         public string? image { get; set; }
+        public string? email { get; set; }
         public string? role { get; set; }
     }
 }

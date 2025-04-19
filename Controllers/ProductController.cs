@@ -42,6 +42,7 @@ public class ProductController : ControllerBase
         return NotFound(result.ErrorMessage);
     }
     [HttpGet("GetAllProductsByStoreIdAndSearchTerm/{searchTerm}")]
+    
     public async Task<IActionResult> GetAllProductsByStoreIdAndSearchTerm(string searchTerm, int pageIndex = 1, int pageSize = 10)
     {
  
