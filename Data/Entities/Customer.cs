@@ -7,6 +7,7 @@ namespace imsapi.Data.Entities
         public int storeId { get; set; }
         public virtual Store Store { get; set; }
         public string fullName { get; set; }
+        public string fullNameLower { get; set; }
         public string info { get; set; }
         public string phone { get; set; }
         public int userId { get; set; }

@@ -31,6 +31,7 @@ namespace imsapi.Controllers
             }
             return BadRequest(result.ErrorMessage);
         }
+        
         [HttpGet("{id}")]
         public async Task<IActionResult> GetCustomer(int id)
         {
@@ -53,11 +54,23 @@ namespace imsapi.Controllers
             }
             return NotFound(result.ErrorMessage);
         }
+        
         [HttpGet("all")]
-        public async Task<IActionResult> GetAllCustomers()
+        public async Task<IActionResult> GetAllCustomers(int pageIndex=1,int pageSize=10)
         {
             var storeId =int.Parse(User.FindFirst("storeId")?.Value);
-            var result = await _customerService.GetCustomersByStoreIdAsync(storeId);
+            var result = await _customerService.GetCustomersByStoreIdAsync(storeId,pageIndex,pageSize);
+            if (result.IsSuccess)
+            {
+                return Ok(result);
+            }
+            return NotFound(result.ErrorMessage);
+        }
+         [HttpGet("Search")]
+        public async Task<IActionResult> GetAllCustomers(string searchTerm,int pageIndex=1,int pageSize=10)
+        {
+            var storeId =int.Parse(User.FindFirst("storeId")?.Value);
+            var result = await _customerService.SearchCustomersByStoreIdAsync(storeId,searchTerm,pageIndex,pageSize);
             if (result.IsSuccess)
             {
                 return Ok(result);

@@ -43,7 +43,7 @@ public class ProductController : ControllerBase
     }
     [HttpGet("GetAllProductsByStoreIdAndSearchTerm/{searchTerm}")]
     
-    public async Task<IActionResult> GetAllProductsByStoreIdAndSearchTerm(string searchTerm, int pageIndex = 1, int pageSize = 10)
+    public async Task<IActionResult> GetAllProductsByStoreIdAndSearchTerm([FromRoute]string searchTerm, [FromQuery]int pageIndex = 1, [FromQuery]int pageSize = 10)
     {
  
         var storeId =int.Parse(User.FindFirst("storeId")?.Value);

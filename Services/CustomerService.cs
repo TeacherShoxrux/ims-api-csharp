@@ -26,7 +26,9 @@ namespace imsapi.Services
                     storeId = storeId,
                     userId = userId,
                     info = customer.info,
+                    fullNameLower=customer.name.ToLower(),
                     createdAt = DateTime.UtcNow});
+                    
                 _context.SaveChanges();
 
                 return Task.FromResult<Result<Customer>>(new Result<Customer>(true){
@@ -96,11 +98,12 @@ namespace imsapi.Services
             }
         }
 
-        public Task<Result<IEnumerable<Customer>>> GetCustomersByStoreIdAsync(int storeId)
+        public Task<Result<IEnumerable<Customer>>> GetCustomersByStoreIdAsync(int storeId,int pageIndex=1,int pageSize=10)
         {
             try
             {
-                var customers = _context.Customers.Where(c => c.storeId == storeId).ToList();
+                var customers = _context.Customers.Where(c => c.storeId == storeId).Skip((pageIndex - 1) * pageSize)
+                .Take(pageSize).ToList();
                 if (customers == null || !customers.Any())
                 {
                     return Task.FromResult(new Result<IEnumerable<Customer>>("No customers found"));
@@ -122,6 +125,32 @@ namespace imsapi.Services
             {
                 return Task.FromResult(new Result<IEnumerable<Customer>>("Error retrieving customers: " + ex.Message));
             }
+        }
+
+        public Task<Result<IEnumerable<Customer>>> SearchCustomersByStoreIdAsync(int storeId, string searchTerm, int pageIndex = 1, int pageSize = 10)
+        {
+            try
+            {
+                 var customers = _context.Customers.Where(c => c.storeId == storeId && c.fullNameLower.Contains(searchTerm.ToLower())).Skip((pageIndex - 1) * pageSize)
+                .Take(pageSize).ToList();
+                var customerList = customers.Select(c => new Customer()
+                {
+                    id = c.id,
+                    name = c.fullName,
+                    phone = c.phone,
+                    createdAt = c.createdAt
+                });
+
+                return Task.FromResult(new Result<IEnumerable<Customer>>(true){
+                    Data = customerList
+                });
+            }
+            catch (System.Exception)
+            {
+                
+                throw;
+            }
+            throw new NotImplementedException();
         }
 
         public Task<Result<Customer>> UpdateCustomerAsync(int userId, Customer customer)
