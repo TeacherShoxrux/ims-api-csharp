@@ -132,7 +132,7 @@ namespace imsapi.Services
             }
         }
 
-        public Task<Result<User>> UpdateUserAsync(int userId, NewUser user)
+        public Task<Result<User>> UpdateUserAsync(int userId, UpdateUser user)
         {
             try
             {
@@ -141,9 +141,8 @@ namespace imsapi.Services
                 {
                     return Task.FromResult(new Result<User>("User not found"));
                 }
-                existingUser.fullName = user.fullName;
-                existingUser.phone = user.phone;
-                existingUser.passwordHash = user.password.Sha256();
+                existingUser.email = user.email;
+                existingUser.image = user.image;
                 _dbContext.SaveChanges();
                 return Task.FromResult(new Result<User>(true)
                 {
@@ -153,6 +152,8 @@ namespace imsapi.Services
                         fullName = existingUser.fullName,
                         phone = existingUser.phone,
                         role = Enum.GetName(existingUser.role),
+                        image=existingUser.image,
+                        
                     }
                 });
             }

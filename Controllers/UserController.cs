@@ -2,6 +2,7 @@ namespace imsapi.Controllers;
 
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
+using System.Threading.Tasks;
 using global::DTO.User;
 using imsapi.Services;
 using IMSAPI.DTO.User;
@@ -49,16 +50,11 @@ public partial class UserController : ControllerBase
    
     [Authorize]
     [HttpGet("info")]
-     public IActionResult GetInfo()
+     public async Task<IActionResult> GetInfo()
     {
-            var userId = User.FindFirst("userId")?.Value;
-            var role = User.FindFirst("userRole")?.Value;
-            var storeId = User.FindFirst("storeId")?.Value;
-    return Ok(new { 
-        UserId = userId, 
-        Role = role, 
-        StoreId = storeId,
-      });
+           var userId =int.Parse(User.FindFirst("userId")?.Value!);
+            var user= await _userService.GetUserByIdAsync(userId);
+    return Ok(new {user});
     }
 
     [Authorize]
@@ -67,6 +63,15 @@ public partial class UserController : ControllerBase
     {
           var storeId =int.Parse(User.FindFirst("storeId")?.Value!);
          var result= await _userService.GetAllUsersByStoreIdAsync(storeId);
+        return Ok(result);
+    }
+    
+    [Authorize]
+    [HttpGet]
+     public async Task<IActionResult> UpdateUser(UpdateUser newUser)
+    {
+          var userId =int.Parse(User.FindFirst("userId")?.Value!);
+         var result= await _userService.UpdateUserAsync(userId,newUser);
         return Ok(result);
     }
     

@@ -28,7 +28,7 @@ namespace imsapi.Services
                     info = customer.info,
                     fullNameLower=customer.name.ToLower(),
                     createdAt = DateTime.UtcNow});
-                    
+
                 _context.SaveChanges();
 
                 return Task.FromResult<Result<Customer>>(new Result<Customer>(true){
@@ -36,7 +36,8 @@ namespace imsapi.Services
                         id = newCustomer.Entity.id,
                         name = newCustomer.Entity.fullName,
                         phone = newCustomer.Entity.phone,
-                        createdAt = newCustomer.Entity.createdAt
+                        createdAt = newCustomer.Entity.createdAt,
+                        info=customer.info,
                     }
                 });
             }
@@ -88,6 +89,7 @@ namespace imsapi.Services
                         id = customer.id,
                         name = customer.fullName,
                         phone = customer.phone,
+                        info=customer.info,
                         createdAt = customer.createdAt
                     }
                 });
@@ -114,7 +116,8 @@ namespace imsapi.Services
                     id = c.id,
                     name = c.fullName,
                     phone = c.phone,
-                    createdAt = c.createdAt
+                    createdAt = c.createdAt,
+                    info=c.info,
                 });
 
                 return Task.FromResult(new Result<IEnumerable<Customer>>(true){
@@ -138,7 +141,8 @@ namespace imsapi.Services
                     id = c.id,
                     name = c.fullName,
                     phone = c.phone,
-                    createdAt = c.createdAt
+                    createdAt = c.createdAt,
+                    info=c.info,
                 });
 
                 return Task.FromResult(new Result<IEnumerable<Customer>>(true){
@@ -147,10 +151,9 @@ namespace imsapi.Services
             }
             catch (System.Exception)
             {
-                
-                throw;
+                throw new NotImplementedException();
             }
-            throw new NotImplementedException();
+           
         }
 
         public Task<Result<Customer>> UpdateCustomerAsync(int userId, Customer customer)
@@ -172,6 +175,7 @@ namespace imsapi.Services
                         id = existingCustomer.id,
                         name = existingCustomer.fullName,
                         phone = existingCustomer.phone,
+                        info=customer.info,
                         createdAt = existingCustomer.createdAt
                     }
                 });

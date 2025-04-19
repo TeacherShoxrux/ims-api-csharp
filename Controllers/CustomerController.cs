@@ -67,7 +67,7 @@ namespace imsapi.Controllers
             return NotFound(result.ErrorMessage);
         }
          [HttpGet("Search")]
-        public async Task<IActionResult> GetAllCustomers(string searchTerm,int pageIndex=1,int pageSize=10)
+        public async Task<IActionResult> SearchAllCustomers(string searchTerm,int pageIndex=1,int pageSize=10)
         {
             var storeId =int.Parse(User.FindFirst("storeId")?.Value);
             var result = await _customerService.SearchCustomersByStoreIdAsync(storeId,searchTerm,pageIndex,pageSize);
