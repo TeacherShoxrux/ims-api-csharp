@@ -123,6 +123,8 @@ namespace imsapi.Services
                         fullName = user.fullName,
                         phone = user.phone,
                         role = Enum.GetName(user.role),
+                        image=user.image,
+                        email=user.email
                     }
                 });
             }
