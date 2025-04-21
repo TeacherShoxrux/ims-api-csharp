@@ -103,68 +103,85 @@ public class PaymentService : IPaymentService
         }
     }
 
-    public Task<Result<PaymentShort>> ProcessPaymentAsync(int storeId, int userId, NewPayment payment)
+   public Task<Result<PaymentShort>> ProcessPaymentAsync(int storeId, int userId, NewPayment payment)
+{
+    try
     {
-        try
+        var customer = _context.Customers.FirstOrDefault(c => c.id == payment.customerId);
+        if (customer == null)
         {
+            return Task.FromResult(new Result<PaymentShort>("Mijoz topilmadi"));
+        }
 
-            var customer = _context.Customers.FirstOrDefault(c => c.id == payment.customerId);
-            if (customer == null)
-            {
-                return Task.FromResult(new Result<PaymentShort>("Customer not found"));
-            }
-            var products = _context.Products.Where(p => payment.poducts.Select(x => x.id).Contains(p.id)).ToList();
-            List<Data.Entities.PaymentItem> paymentItems = new List<Data.Entities.PaymentItem>();
-            var newPayment = _context.Payments.Add(
-                new(){
-                    createdAt = DateTime.UtcNow,
-                    amount = products.Sum(e=>e.salePrice),
-                    userId=userId,
-                    storeId=storeId,
-                    paymentMethod=payment.paymentMethod,
-                    customerId=payment.customerId,
-                    Products = products
-                }
-            );
-            _context.SaveChanges();
+        var products = _context.Products
+            .Where(p => payment.poducts.Select(x => x.id).Contains(p.id)).ToList();
 
-            for (int i = 0; i < products.Count; i++)
-            {
-                paymentItems.Add(new(){
-                    paymentId=newPayment.Entity.id,
-                    productId=products[i].id,
-                    quantity=payment.poducts[i].Quantity,
-                    price=products[i].salePrice,
-                    totalPrice=payment.poducts[i].Quantity*products[i].salePrice,
-                    description="Succed",
-                });
-                products[i].quantity-=payment.poducts[i].Quantity;
+        if (products == null || products.Count == 0)
+        {
+            return Task.FromResult(new Result<PaymentShort>("Mahsulot topilmadi"));
+        }
 
-            }
-            _context.PaymentItems.AddRange(paymentItems);
-            _context.Products.UpdateRange(products);
-            _context.SaveChanges();
-            
-            if (products == null || products.Count == 0)
+        // Check if quantities are sufficient
+        for (int i = 0; i < products.Count; i++)
+        {
+            var ordered = payment.poducts.FirstOrDefault(x => x.id == products[i].id);
+            if (ordered == null || products[i].quantity < ordered.Quantity)
             {
-                return Task.FromResult(new Result<PaymentShort>("Products not found"));
+                return Task.FromResult(new Result<PaymentShort>($"Mahsulot '{products[i].name}' etarli miqdorda emas."));
             }
-            
-            _context.SaveChanges();
-            return Task.FromResult(new Result<PaymentShort>(true)
+        }
+
+        var newPayment = _context.Payments.Add(new()
+        {
+            createdAt = DateTime.UtcNow,
+            amount = products.Sum(e => e.salePrice),
+            userId = userId,
+            storeId = storeId,
+            paymentMethod = payment.paymentMethod??"",
+            customerId = payment.customerId,
+            Products = products
+        });
+
+        _context.SaveChanges();
+
+        List<Data.Entities.PaymentItem> paymentItems = new();
+
+        for (int i = 0; i < products.Count; i++)
+        {
+            var ordered = payment.poducts.First(x => x.id == products[i].id);
+
+            paymentItems.Add(new()
             {
-                Data = new()
-                {
-                    Id = newPayment.Entity.id,
-                    CreatedAt = newPayment.Entity.createdAt,
-                    Amount = newPayment.Entity.amount,
-                    PaymentMethod = newPayment.Entity.paymentMethod,
-                }
+                paymentId = newPayment.Entity.id,
+                productId = products[i].id,
+                quantity = ordered.Quantity,
+                price = products[i].salePrice,
+                totalPrice = ordered.Quantity * products[i].salePrice,
+                description = "Muvaffaiyatli",
             });
+
+            products[i].quantity -= ordered.Quantity;
         }
-        catch (Exception ex)
+
+        _context.PaymentItems.AddRange(paymentItems);
+        _context.Products.UpdateRange(products);
+        _context.SaveChanges();
+
+        return Task.FromResult(new Result<PaymentShort>(true)
         {
-            return Task.FromResult(new Result<PaymentShort>(ex.Message));
-        }
+            Data = new()
+            {
+                Id = newPayment.Entity.id,
+                CreatedAt = newPayment.Entity.createdAt,
+                Amount = newPayment.Entity.amount,
+                PaymentMethod = newPayment.Entity.paymentMethod,
+            }
+        });
     }
+    catch (Exception ex)
+    {
+        return Task.FromResult(new Result<PaymentShort>(ex.Message));
+    }
+}
+
 }
