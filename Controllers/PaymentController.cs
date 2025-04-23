@@ -25,13 +25,19 @@ public class PaymentController : ControllerBase
     {
         try
         {
-            var result= await _paymentService.ProcessPaymentAsync(1,1,payment);
-            return Ok(result);
-        }
-        catch (System.Exception)
-        {
+             var storeId =int.Parse(User.FindFirst("storeId")?.Value);
+             var userId =int.Parse(User.FindFirst("userId")?.Value);
+            var result= await _paymentService.ProcessPaymentAsync(storeId,userId,payment);
+            if (result.IsSuccess)
+            {
+                return Ok(result);
+            }
+            return NotFound(result);
             
-            throw;
+        }
+        catch (System.Exception e)
+        {
+           return NoContent();
         }
     }
     [HttpGet("GetPayments")]
@@ -39,16 +45,16 @@ public class PaymentController : ControllerBase
     {
         try
         {
-            int storeId= 1;
+            var storeId =int.Parse(User.FindFirst("storeId")?.Value);
             var result= await _paymentService.GetPaymentsListPagenatedByStoreId(storeId,page,pageSize);
             return Ok(result);
         }
-        catch (System.Exception)
+        catch (Exception e)
         {
             
             return BadRequest(new Result<List<PaymentShort>>(false)
             {
-                ErrorMessage = "An error occurred while fetching the payments list."
+                ErrorMessage = $"An error occurred while fetching the payments list. -> {e.Message}"
             });
         }
     }

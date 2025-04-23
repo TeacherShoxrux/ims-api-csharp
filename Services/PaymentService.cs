@@ -44,6 +44,7 @@ public class PaymentService : IPaymentService
                         phone = payment.Customer.phone,
                         
                     },
+
                     products = payment.Products.Select(p => new Product()
                     {
                         id = p.id,
@@ -171,6 +172,8 @@ public class PaymentService : IPaymentService
         {
             Data = new()
             {
+                customerName=customer.fullName,
+                customerPhone=customer.phone,
                 Id = newPayment.Entity.id,
                 CreatedAt = newPayment.Entity.createdAt,
                 Amount = newPayment.Entity.amount,

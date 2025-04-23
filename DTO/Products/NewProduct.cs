@@ -13,5 +13,6 @@ namespace IMSAPI.DTO.Products
         [Required]
         public int categoryId { get; set; }
         public string? image { get; set; }
+        public string? unit  { get; set; }
     }
 }
