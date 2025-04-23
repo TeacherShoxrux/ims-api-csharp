@@ -14,5 +14,6 @@ namespace IMSAPI.DTO.Products
         public int categoryId { get; set; }
         public string? image { get; set; }
         public string? unit  { get; set; }
+         public int? quantityAlarms { get; set; }
     }
 }

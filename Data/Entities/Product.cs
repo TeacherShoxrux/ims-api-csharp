@@ -11,6 +11,7 @@ namespace imsapi.Data.Entities
         public decimal purchasePrice { get; set; }
         public decimal salePrice { get; set; }
         public int quantity { get; set; }
+        public int? quantityAlarms { get; set; }=null;
         public int storeId { get; set; }
          public string? unit  { get; set; }
         public virtual Store? Store { get; set; }

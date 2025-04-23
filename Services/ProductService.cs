@@ -29,8 +29,8 @@ public class ProductService : IProductService
                 description = product.description,
                 salePrice = product.salePrice,
                 purchasePrice = product.purchasePrice,
-                quantity = product.quantity
-            
+                quantity = product.quantity,
+                unit=product.unit
             });
             _context.SaveChanges();
 
@@ -124,7 +124,7 @@ public class ProductService : IProductService
     {
         try
         {
-            var products = _context.Products
+            var products = _context.Products.Include(e=>e.Category)
                 .Where(p => p.storeId == storeId)
                 .Skip((pageIndex - 1) * pageSize)
                 .Take(pageSize)
@@ -138,7 +138,8 @@ public class ProductService : IProductService
                     salePrice = p.salePrice,
                     purchasePrice = p.purchasePrice,
                     quantity = p.quantity,
-                    image=p.image
+                    image=p.image,
+                    categoryName=p.Category?.name??""
                 }).ToList()
             });
         }
