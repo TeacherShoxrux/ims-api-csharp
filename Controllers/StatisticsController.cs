@@ -4,7 +4,7 @@ namespace imsapi.Controllers
     using Microsoft.AspNetCore.Authorization;
     using Microsoft.AspNetCore.Mvc;
     using System.Threading.Tasks;
-    [Authorize]
+    // [Authorize]
     [ApiController]
     [Route("api/[controller]")]
     public class StatisticsController : ControllerBase
@@ -38,5 +38,22 @@ namespace imsapi.Controllers
             }
             return NotFound(result.ErrorMessage);
         }
+        
+        [HttpGet("export-products")] 
+        public async Task<IActionResult> GetStoreById()
+        {
+            // var storeId =int.Parse(User.FindFirst("storeId")?.Value);
+            var storeId =1;
+            var result = await _statisticsService.ExportStoreTotalByIdAsync(storeId);
+            if (result.IsSuccess)
+            {
+                
+                return File(result?.Data?.ToArray(),
+                "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+                "products.xlsx");
+            }
+            return NoContent();
+        }
+
     }
 }
