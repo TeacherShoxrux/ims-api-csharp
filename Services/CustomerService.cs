@@ -149,9 +149,9 @@ namespace imsapi.Services
                     Data = customerList
                 });
             }
-            catch (System.Exception)
+            catch (Exception ex)
             {
-                throw new NotImplementedException();
+               return Task.FromResult(new Result<IEnumerable<Customer>>("Error updating customer: " + ex.Message));
             }
            
         }
