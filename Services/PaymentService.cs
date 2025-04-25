@@ -23,7 +23,7 @@ public class PaymentService : IPaymentService
     {
        try
         {
-            var payment = _context.Payments.Include(e=>e.Products).Include(c=>c.Customer).FirstOrDefault(p => p.id == id);
+            var payment = _context.Payments.OrderByDescending(e=>e.id).Include(e=>e.Products).Include(c=>c.Customer).FirstOrDefault(p => p.id == id);
             if (payment == null)
             {
                 return Task.FromResult(new Result<Payment>("Payment not found"));
@@ -67,7 +67,7 @@ public class PaymentService : IPaymentService
     public Task<Result<List<PaymentShort>>> GetPaymentsListPagenatedByStoreId(int storeId, int page=1, int pageSize=10)
     {
         try{
-            var payments = _context.Payments
+            var payments = _context.Payments.OrderByDescending(e=>e.id)
                 .Include(c => c.Customer)
                 .Include(c => c.User)
                 .Where(p => p.storeId == storeId)

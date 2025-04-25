@@ -3,6 +3,7 @@ using imsapi.Data;
 using imsapi.DTO;
 using imsapi.Utils;
 using IMSAPI.DTO.User;
+using Microsoft.EntityFrameworkCore;
 
 namespace imsapi.Services
 {
@@ -110,7 +111,7 @@ namespace imsapi.Services
         {
             try
             {
-                var user = _dbContext.Users.FirstOrDefault(u => u.id == userId);
+                var user = _dbContext.Users.Include(e=>e.Store).FirstOrDefault(u => u.id == userId);
                 if (user == null)
                 {
                     return Task.FromResult(new Result<User?>("User not found"));
@@ -124,7 +125,11 @@ namespace imsapi.Services
                         phone = user.phone,
                         role = Enum.GetName(user.role),
                         image=user.image,
-                        email=user.email
+                        email=user.email,
+                        storeImage=user.Store.image,
+                        storeName=user.Store.name,
+                        storeAddress=user.Store.address,
+                        
                     }
                 });
             }

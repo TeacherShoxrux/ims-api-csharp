@@ -104,7 +104,7 @@ namespace imsapi.Services
         {
             try
             {
-                var customers = _context.Customers.Where(c => c.storeId == storeId).Skip((pageIndex - 1) * pageSize)
+                var customers = _context.Customers.OrderByDescending(e=>e.id).Where(c => c.storeId == storeId).Skip((pageIndex - 1) * pageSize)
                 .Take(pageSize).ToList();
                 if (customers == null || !customers.Any())
                 {
@@ -134,7 +134,7 @@ namespace imsapi.Services
         {
             try
             {
-                 var customers = _context.Customers.Where(c => c.storeId == storeId && c.fullNameLower.Contains(searchTerm.ToLower())).Skip((pageIndex - 1) * pageSize)
+                 var customers = _context.Customers.OrderByDescending(e=>e.id).Where(c => c.storeId == storeId && c.fullNameLower.Contains(searchTerm.ToLower())).Skip((pageIndex - 1) * pageSize)
                 .Take(pageSize).ToList();
                 var customerList = customers.Select(c => new Customer()
                 {

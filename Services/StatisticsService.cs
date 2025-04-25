@@ -29,8 +29,8 @@ namespace imsapi.Services
                     totalSales=totalSales, 
                     totalProduct=totalProduct,
                     totalCustomer=totalCustomer,
-                    topProduct=topProduct.name,
-                    topProductQuantity=topProduct.quantity,
+                    topProduct=topProduct?.name??"",
+                    topProductQuantity=topProduct?.quantity,
                     } });
             }
             catch (Exception ex)

@@ -2,6 +2,7 @@ namespace imsapi.Controllers;
 
 using imsapi.DTO.Store;
 using imsapi.Services;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 [ApiController]
@@ -25,6 +26,7 @@ public async Task<IActionResult> CreateStore([FromBody] NewStore store)
     return BadRequest(result.ErrorMessage);
 }
 [HttpGet("GetStore")]
+[Authorize]
 public async Task<IActionResult> GetStore()
 {
     var storeId =int.Parse(User.FindFirst("storeId")?.Value);

@@ -1,6 +1,7 @@
 using imsapi.Data;
 using imsapi.DTO;
 using imsapi.DTO.Category;
+using Microsoft.EntityFrameworkCore;
 
 namespace imsapi.Services
 {
@@ -15,7 +16,7 @@ namespace imsapi.Services
         {
             try
             {
-                var categories = _context.Categories.Where(c => c.storeId == storeId).ToList();
+                var categories = _context.Categories.Where(c => c.storeId == storeId).OrderByDescending(e=>e.id).ToList();
                 return Task.FromResult(new Result<IEnumerable<Category>>(true)
                 {
                     
@@ -126,9 +127,35 @@ namespace imsapi.Services
             }
         }
 
-        public Task<Result<Category>> DeleteCategory(int categoryId)
+        public async Task<Result<Category>> DeleteCategory(int categoryId)
         {
-            throw new NotImplementedException();
+            try
+            {
+                var category = await _context.Categories.FirstOrDefaultAsync(e=>e.id==categoryId);
+                if (category is null)
+                {
+                    return new(false){
+                        ErrorMessage="Kategoriya topilmadi"
+                    };
+                }
+                _context.Categories.Remove(category);
+                _context.SaveChanges();
+                return new(true){
+                    Data = new Category()
+                    {
+                        id = category.id,
+                        name = category.name,
+                        storeId = category.storeId,
+                        createdAt = category.createdAt,
+                        updatedAt = category.updatedAt
+                    }
+                };
+            }
+            catch (System.Exception ex)
+            {
+                
+               return new(ex.Message);
+            }
         }
     }
  

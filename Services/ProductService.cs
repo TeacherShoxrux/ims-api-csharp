@@ -94,7 +94,7 @@ public class ProductService : IProductService
     {
         try
         {
-            var products = _context.Products
+            var products = _context.Products.OrderByDescending(e=>e.id)
                 .Where(p => p.storeId == storeId && p.nameLower.Contains(searchTerm.ToLower()))
                 .Skip((pageIndex - 1) * pageSize)
                 .Take(pageSize)
@@ -124,7 +124,7 @@ public class ProductService : IProductService
     {
         try
         {
-            var products = _context.Products.Include(e=>e.Category)
+            var products = _context.Products.OrderByDescending(e=>e.id).Include(e=>e.Category)
                 .Where(p => p.storeId == storeId)
                 .Skip((pageIndex - 1) * pageSize)
                 .Take(pageSize)
