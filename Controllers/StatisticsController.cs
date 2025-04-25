@@ -17,17 +17,23 @@ namespace imsapi.Controllers
         }
 
         [HttpGet("GetStoreTotal")]
+        [Authorize]
         public async Task<IActionResult> GetStoreTotalById()
         {
-            var storeId =int.Parse(User.FindFirst("storeId")?.Value);
+           
+            // var storeId =1;//l int.Parse(User.FindFirst("storeId")?.Value);
+             var storeId =int.Parse(User.FindFirst("storeId")?.Value);
             var result = await _statisticsService.GetStoreTotalByIdAsync(storeId);
             if (result.IsSuccess)
             {
                 return Ok(result);
             }
             return NotFound(result.ErrorMessage);
+            
+            
         }
         [HttpGet("GetStore")] 
+        [Authorize]
         public async Task<IActionResult> GetStoreById(DateTime startDate, DateTime endDate)
         {
             var storeId =int.Parse(User.FindFirst("storeId")?.Value);
@@ -40,10 +46,10 @@ namespace imsapi.Controllers
         }
         
         [HttpGet("export-products")] 
+        [Authorize]
         public async Task<IActionResult> GetStoreById()
         {
-            // var storeId =int.Parse(User.FindFirst("storeId")?.Value);
-            var storeId =1;
+            var storeId =int.Parse(User.FindFirst("storeId")?.Value);
             var result = await _statisticsService.ExportStoreTotalByIdAsync(storeId);
             if (result.IsSuccess)
             {

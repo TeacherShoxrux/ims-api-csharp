@@ -1,7 +1,4 @@
 namespace imsapi.Controllers;
-
-using System.IdentityModel.Tokens.Jwt;
-using System.Security.Claims;
 using System.Threading.Tasks;
 using global::DTO.User;
 using imsapi.Services;
@@ -21,18 +18,16 @@ public partial class UserController : ControllerBase
         _userService=userService;
          _httpContextAccessor = httpContextAccessor;
     }
-    // [HttpGet]
-    //  public async Task<IActionResult> Authenticate(int id)
-    // {
-    //     // var session = await _userService.GetUserDetails(id);
-    //     return Ok("session");
-    // }
     
     [HttpPost("Login")]
      public async Task<IActionResult> Authenticate(UserLogin login)
     {
         var session = await _userService.Authenticate(login);
-        return Ok(session);
+        if(session.IsSuccess){
+            return Ok(session);
+        }
+        return NotFound(session);
+        
     }
 
     [Authorize]
