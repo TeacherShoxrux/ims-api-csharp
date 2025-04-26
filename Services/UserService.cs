@@ -126,9 +126,9 @@ namespace imsapi.Services
                         role = Enum.GetName(user.role),
                         image=user.image,
                         email=user.email,
-                        storeImage=user.Store.image,
-                        storeName=user.Store.name,
-                        storeAddress=user.Store.address,
+                        storeImage=user.Store?.image,
+                        storeName=user.Store?.name,
+                        storeAddress=user.Store?.address,
                         
                     }
                 });
@@ -187,7 +187,7 @@ namespace imsapi.Services
                         UserId = user.id,
                         CreatedAt = DateTime.UtcNow,
                         ExpiresAt = DateTime.UtcNow.AddHours(1440),
-                        accessToken = _jwtService.GenerateToken(user.id, Enum.GetName(user.role).ToString(),user.storeId),
+                        accessToken = _jwtService.GenerateToken(user.id, Enum.GetName(user.role)?.ToString()??"",user.storeId),
                         refreshoken = Guid.NewGuid().ToString(),
                     }
                 });

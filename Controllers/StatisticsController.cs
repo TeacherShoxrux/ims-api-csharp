@@ -60,6 +60,52 @@ namespace imsapi.Controllers
             }
             return NoContent();
         }
+        [HttpGet("export-sale-month")] 
+        [Authorize]
+        public async Task<IActionResult> GetThisMonthId()
+        {
+            var storeId =int.Parse(User.FindFirst("storeId")?.Value);
+            var result = await _statisticsService.ExportThisMonthSaleTotalByIdAsync(storeId);
+            if (result.IsSuccess)
+            {
+                
+                return File(result?.Data?.ToArray(),
+                "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+                "products.xlsx");
+            }
+            return NoContent();
+        }
+        [HttpGet("export-sale-week")] 
+        [Authorize]
+        public async Task<IActionResult> GetThisWeek()
+        {
+            var storeId =int.Parse(User.FindFirst("storeId")?.Value);
+            var result = await _statisticsService.ExportThisWeekSaleTotalByIdAsync(storeId);
+            if (result.IsSuccess)
+            {
+                
+                return File(result?.Data?.ToArray(),
+                "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+                "products.xlsx");
+            }
+            return NoContent();
+        }   
+            [HttpGet("export-sale-day")] 
+        [Authorize]
+        public async Task<IActionResult> GetThisDay()
+        {
+            var storeId =int.Parse(User.FindFirst("storeId")?.Value);
+            var result = await _statisticsService.ExportThisDaySaleTotalByIdAsync(storeId);
+            if (result.IsSuccess)
+            {
+                
+                return File(result?.Data?.ToArray(),
+                "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+                "products.xlsx");
+            }
+            return NoContent();
+        }
+        
 
     }
 }
